@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistical Rethinking | Video Glossary & Search</title>
+    <meta name="description" content="Searchable database for Richard McElreath's Statistical Rethinking courses.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Background Elements -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <div class="app-container">
+
+        <!-- Sidebar: Glossary -->
+        <aside class="sidebar glass-panel">
+            <header class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🦉</span>
+                    <h1>Statistical<br><span class="highlight">Rethinking</span></h1>
+                </div>
+                <p class="subtitle">Reference Database</p>
+            </header>
+
+            <div class="sidebar-tabs">
+                <button id="tab-glossary" class="tab-btn active">Glossary</button>
+                <button id="tab-saved" class="tab-btn">Saved <span id="saved-count">(0)</span></button>
+            </div>
+
+            <!-- Glossary Container -->
+            <div id="glossary-view" class="drawer-container active">
+                <div class="search-wrap">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <input type="text" id="glossary-filter" placeholder="Filter terms...">
+                </div>
+                <ul id="glossary-list" class="glossary-list">
+                    <!-- Glossary rendering via JS -->
+                </ul>
+            </div>
+
+            <!-- Saved Container -->
+            <div id="saved-view" class="drawer-container" style="display: none;">
+                <ul id="saved-list" class="results-list">
+                    <div class="empty-state">
+                        <p>No saved segments yet.</p>
+                    </div>
+                </ul>
+            </div>
+
+            <footer class="sidebar-footer">
+                <p>Data by Richard McElreath</p>
+                <a href="#" id="impressum-link"
+                    style="color:var(--text-muted); font-size:0.75rem; display:block; margin-top:5px; text-decoration:none;">About
+                    / Impressum</a>
+            </footer>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Video Player -->
+            <section class="video-section glass-panel">
+                <div id="video-container" class="video-container">
+                    <div class="video-placeholder">
+                        <div class="loader-ring"></div>
+                        <p>Search a concept or select a glossary term to begin.</p>
+                    </div>
+                    <iframe id="youtube-player" src="" title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen style="display: none;"></iframe>
+                </div>
+                <div class="video-meta">
+                    <h3 id="current-video-title">No Video Selected</h3>
+                    <p id="current-video-playlist">---</p>
+                </div>
+            </section>
+
+            <!-- Global Search & Results -->
+            <section class="search-section glass-panel">
+                <div class="main-search">
+                    <input type="text" id="global-search" placeholder="Search the subtitles..." autocomplete="off">
+                    <button id="search-btn" class="btn-primary">Search</button>
+                    <div class="search-stats" id="search-stats">0 matches found</div>
+                </div>
+
+                <div id="density-map-container" class="density-map-container" style="display: none;">
+                    <h3>Global Course Hit Density</h3>
+                    <div id="density-map" class="density-map"></div>
+                </div>
+
+                <div class="results-container">
+                    <ul id="results-list" class="results-list">
+                        <!-- Search results via JS -->
+                        <div class="empty-state">
+                            <span class="empty-icon">🔍</span>
+                            <p>Enter a term above to search through the entire course subtitles.</p>
+                        </div>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- AI Loading Status -->
+    <div id="ai-status"
+        style="position:fixed; bottom: 20px; right: 20px; background: var(--bg-glass); padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border-glass); display: flex; align-items: center; gap: 10px; z-index: 1000; font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent); transition: opacity 0.5s;">
+        <div class="loader-ring tiny"></div>
+        <span id="ai-status-text">Booting WebAssembly LLM...</span>
+    </div>
+
+    <!-- Impressum Modal -->
+    <div id="impressum-modal" class="modal-overlay" style="display:none;">
+        <div class="modal-content glass-panel" style="max-width: 500px; padding: 2.5rem; line-height: 1.6;">
+            <span class="close-modal" id="close-impressum">&times;</span>
+            <h2 style="margin-bottom: 1.2rem; font-family: var(--font-mono); color: var(--accent);">Impressum & Credits
+            </h2>
+            <p style="margin-bottom: 1rem; color: var(--text-muted);">This application was built to serve as a
+                <strong>digital register and semantic index</strong> for the brilliant <em>Statistical Rethinking</em>
+                courses (2026).
+            </p>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">Like a register at the back of a textbook, it
+                helps you quickly locate concepts, formulas, or those famous thematic examples across 22 hours of dense
+                lectures when you can't perfectly remember where they appeared.</p>
+            <div style="border-top: 1px solid var(--border-glass); padding-top: 1.5rem;">
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 0.5rem;">
+                    <strong style="color: var(--text);">Concept & Lecture Data:</strong> <br>Professor Richard McElreath
+                </p>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">
+                    <strong style="color: var(--text);">Engineering & ML Infrastructure:</strong> <br>Gemini AI &
+                    Antigrav
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fuse.js for exact fallback -->
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>
