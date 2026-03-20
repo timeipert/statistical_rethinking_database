@@ -597,18 +597,26 @@ function bindClickHandlers(container) {
 function loadVideo(videoId, startTime, title, playlist) {
     if (!videoId) return;
 
-    // Show entire video section
-    mainVideoSection.style.display = 'flex';
-    videoPlayer.style.display = 'block';
-
-    const embedUrl = `https://www.youtube.com/embed/${videoId}?start=${startTime}&autoplay=1`;
-    videoPlayer.src = embedUrl;
+    // Show entire video section if available
+    if (mainVideoSection) mainVideoSection.style.display = 'flex';
     
-    currentVideoTitle.innerText = title;
-    currentVideoPlaylist.innerText = playlist;
+    if (videoPlayer) {
+        videoPlayer.style.display = 'block';
+        const embedUrl = `https://www.youtube.com/embed/${videoId}?start=${startTime}&autoplay=1`;
+        videoPlayer.src = embedUrl;
+    }
+    
+    if (currentVideoTitle) currentVideoTitle.innerText = title || "Unknown Title";
+    if (currentVideoPlaylist) currentVideoPlaylist.innerText = playlist || "Unknown Playlist";
     
     // Auto scroll to player 
-    mainVideoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (mainVideoSection) {
+        mainVideoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+        // Fallback for old cached HTML viewers
+        const oldSection = document.querySelector('.video-section');
+        if (oldSection) oldSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 }
 
 // Start app
