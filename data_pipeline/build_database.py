@@ -127,6 +127,9 @@ def build_database():
         })
         print(f"Processed: {title} ({len(subs)} segments)")
         
+    # Sort database chronologically by title (immunizes against backward youtube uploads)
+    database.sort(key=lambda x: str(x['title']).lower())
+        
     output_path = 'database.json'
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(database, f, indent=2, ensure_ascii=False)

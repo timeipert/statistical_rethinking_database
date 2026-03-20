@@ -140,115 +140,17 @@
     ]
   },
   {
-    "video_id": "fuonUuKTOl4",
-    "video_title": "Statistical Rethinking Lecture B10 - Hidden Markov Models",
+    "video_id": "jh3RltVrQ-Q",
+    "video_title": "Statistical Rethinking 2026 - Lecture B01 - Multilevel Models",
     "playlist": "Statistical Rethinking 2026 Experienced Section B",
     "terms": [
-      "Prior Probability",
-      "Bayesian Inference",
-      "Causal Inference",
-      "Scientific Models",
-      "Majority",
-      "Theta",
-      "President"
-    ]
-  },
-  {
-    "video_id": "Cv3rkUZc_cg",
-    "video_title": "Statistical Rethinking Lecture B09 - Generalized Linear Madness",
-    "playlist": "Statistical Rethinking 2026 Experienced Section B",
-    "terms": [
-      "Scientific Models",
-      "Generalized Linear Model",
-      "Causal Inference",
-      "Posterior Distribution",
-      "Hairs",
-      "Links",
-      "Volume"
-    ]
-  },
-  {
-    "video_id": "VQm_toQpfEM",
-    "video_title": "Statistical Rethinking Lecture B08 - Missing and censored data",
-    "playlist": "Statistical Rethinking 2026 Experienced Section B",
-    "terms": [
-      "Missing Data",
-      "Measurement Error",
-      "Posterior Distribution",
-      "Prior Probability",
-      "Cats",
-      "Adopted",
-      "Sensoring"
-    ]
-  },
-  {
-    "video_id": "IkWcbiwymi4",
-    "video_title": "Statistical Rethinking Lecture B07 - Measurement Models",
-    "playlist": "Statistical Rethinking 2026 Experienced Section B",
-    "terms": [
-      "Measurement Error",
+      "Partial Pooling",
+      "Multilevel Model",
       "Hierarchical Model",
-      "Measurement Theory",
-      "Prior Probability",
-      "Divorce",
-      "Shrinkage",
-      "Marriage"
-    ]
-  },
-  {
-    "video_id": "MtXg7fxQgeA",
-    "video_title": "Statistical Rethinking Lecture B06 - Gaussian Processes",
-    "playlist": "Statistical Rethinking 2026 Experienced Section B",
-    "terms": [
-      "Gaussian Process",
-      "Measurement Error",
-      "Splines",
-      "Partial Pooling",
-      "Coariance",
-      "Distance",
-      "Spatial"
-    ]
-  },
-  {
-    "video_id": "5oZA8FBn2fc",
-    "video_title": "Statistical Rethinking 2026 Lecture B05 - Social Networks II",
-    "playlist": "Statistical Rethinking 2026 Experienced Section B",
-    "terms": [
-      "Interactions",
-      "Varying Effects",
-      "Posterior Distribution",
-      "Overfitting",
-      "Ties",
-      "Receiving",
-      "Households"
-    ]
-  },
-  {
-    "video_id": "XNNcN8sU8us",
-    "video_title": "Statistical Rethinking 2026 Lecture B04 - Group-level confounding and intro to social networks",
-    "playlist": "Statistical Rethinking 2026 Experienced Section B",
-    "terms": [
-      "Partial Pooling",
-      "Confounding",
-      "Causal Inference",
-      "Multilevel Model",
-      "Households",
-      "Household",
-      "Exchange"
-    ]
-  },
-  {
-    "video_id": "MBhjDMXtANE",
-    "video_title": "Statistical Rethinking 2026 Lecture B03 - Adventures in Covariance",
-    "playlist": "Statistical Rethinking 2026 Experienced Section B",
-    "terms": [
-      "Partial Pooling",
-      "Multilevel Model",
       "Regularization",
-      "Posterior Distribution",
-      "District",
-      "Districts",
-      "Theta"
+      "Tank",
+      "Tadpoles",
+      "Tanks"
     ]
   },
   {
@@ -266,17 +168,115 @@
     ]
   },
   {
-    "video_id": "jh3RltVrQ-Q",
-    "video_title": "Statistical Rethinking 2026 - Lecture B01 - Multilevel Models",
+    "video_id": "MBhjDMXtANE",
+    "video_title": "Statistical Rethinking 2026 Lecture B03 - Adventures in Covariance",
     "playlist": "Statistical Rethinking 2026 Experienced Section B",
     "terms": [
       "Partial Pooling",
       "Multilevel Model",
-      "Hierarchical Model",
       "Regularization",
-      "Tank",
-      "Tadpoles",
-      "Tanks"
+      "Posterior Distribution",
+      "District",
+      "Districts",
+      "Theta"
+    ]
+  },
+  {
+    "video_id": "XNNcN8sU8us",
+    "video_title": "Statistical Rethinking 2026 Lecture B04 - Group-level confounding and intro to social networks",
+    "playlist": "Statistical Rethinking 2026 Experienced Section B",
+    "terms": [
+      "Partial Pooling",
+      "Confounding",
+      "Causal Inference",
+      "Multilevel Model",
+      "Households",
+      "Household",
+      "Exchange"
+    ]
+  },
+  {
+    "video_id": "5oZA8FBn2fc",
+    "video_title": "Statistical Rethinking 2026 Lecture B05 - Social Networks II",
+    "playlist": "Statistical Rethinking 2026 Experienced Section B",
+    "terms": [
+      "Interactions",
+      "Varying Effects",
+      "Posterior Distribution",
+      "Overfitting",
+      "Ties",
+      "Receiving",
+      "Households"
+    ]
+  },
+  {
+    "video_id": "MtXg7fxQgeA",
+    "video_title": "Statistical Rethinking Lecture B06 - Gaussian Processes",
+    "playlist": "Statistical Rethinking 2026 Experienced Section B",
+    "terms": [
+      "Gaussian Process",
+      "Measurement Error",
+      "Splines",
+      "Partial Pooling",
+      "Coariance",
+      "Distance",
+      "Spatial"
+    ]
+  },
+  {
+    "video_id": "IkWcbiwymi4",
+    "video_title": "Statistical Rethinking Lecture B07 - Measurement Models",
+    "playlist": "Statistical Rethinking 2026 Experienced Section B",
+    "terms": [
+      "Measurement Error",
+      "Hierarchical Model",
+      "Measurement Theory",
+      "Prior Probability",
+      "Divorce",
+      "Shrinkage",
+      "Marriage"
+    ]
+  },
+  {
+    "video_id": "VQm_toQpfEM",
+    "video_title": "Statistical Rethinking Lecture B08 - Missing and censored data",
+    "playlist": "Statistical Rethinking 2026 Experienced Section B",
+    "terms": [
+      "Missing Data",
+      "Measurement Error",
+      "Posterior Distribution",
+      "Prior Probability",
+      "Cats",
+      "Adopted",
+      "Sensoring"
+    ]
+  },
+  {
+    "video_id": "Cv3rkUZc_cg",
+    "video_title": "Statistical Rethinking Lecture B09 - Generalized Linear Madness",
+    "playlist": "Statistical Rethinking 2026 Experienced Section B",
+    "terms": [
+      "Scientific Models",
+      "Generalized Linear Model",
+      "Causal Inference",
+      "Posterior Distribution",
+      "Hairs",
+      "Links",
+      "Volume"
+    ]
+  },
+  {
+    "video_id": "fuonUuKTOl4",
+    "video_title": "Statistical Rethinking Lecture B10 - Hidden Markov Models",
+    "playlist": "Statistical Rethinking 2026 Experienced Section B",
+    "terms": [
+      "Prior Probability",
+      "Bayesian Inference",
+      "Causal Inference",
+      "Scientific Models",
+      "Majority",
+      "Theta",
+      "President"
     ]
   }
 ]
