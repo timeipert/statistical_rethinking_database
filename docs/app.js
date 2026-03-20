@@ -13,25 +13,36 @@ let savedSegments = JSON.parse(localStorage.getItem('savedSegments')) || [];
 let ragCorpus = [];
 let corpusEmbeddings = [];
 let embedder = null;
+let currentPlaylistFilter = 'all';
 
 // DOM Elements
 const globalSearchInput = document.getElementById('global-search');
-const searchBtn = document.getElementById('search-btn');
+const openSavedBtn = document.getElementById('open-saved-btn');
+const courseOverviewSection = document.getElementById('course-overview');
+const overviewGrid = document.getElementById('overview-grid');
+const resultsLayout = document.getElementById('results-layout');
 const resultsList = document.getElementById('results-list');
 const searchStats = document.getElementById('search-stats');
-const glossaryList = document.getElementById('glossary-list');
-const glossaryFilterInput = document.getElementById('glossary-filter');
+const densityMapContainer = document.getElementById('density-map-container');
 const mainVideoSection = document.getElementById('main-video-section');
 const videoPlayer = document.getElementById('youtube-player');
 const currentVideoTitle = document.getElementById('current-video-title');
 const currentVideoPlaylist = document.getElementById('current-video-playlist');
 
-const tabGlossary = document.getElementById('tab-glossary');
-const tabSaved = document.getElementById('tab-saved');
-const glossaryView = document.getElementById('glossary-view');
-const savedView = document.getElementById('saved-view');
-const savedCount = document.getElementById('saved-count');
+// Modal Elements
+const savedModal = document.getElementById('saved-modal');
+const closeSavedModal = document.getElementById('close-saved-modal');
 const savedList = document.getElementById('saved-list');
+const savedCount = document.getElementById('saved-count');
+
+const glossaryModal = document.getElementById('glossary-modal');
+const closeGlossaryModal = document.getElementById('close-glossary-modal');
+const glossaryTermsContainer = document.getElementById('glossary-terms-container');
+const openGlossaryBtn = document.getElementById('open-glossary-btn');
+
+const impressumModal = document.getElementById('impressum-modal');
+const closeImpressum = document.getElementById('close-impressum');
+const impressumLink = document.getElementById('impressum-link');
 
 // Format seconds into MM:SS
 function formatTime(seconds) {
@@ -74,20 +85,33 @@ async function init() {
             ignoreLocation: true // Search anywhere in the segment
         });
         
-        setupTabs();
-        renderGlossary();
+        setupModals();
+        renderCourseOverview();
         
         // Init AI Semantic Model in background
         initSemanticAI();
         
-        // Event Listeners
-        searchBtn.addEventListener('click', () => performSearch(globalSearchInput.value));
-        globalSearchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') performSearch(globalSearchInput.value);
+        // Event Listeners for Debounced Live Search
+        let searchTimeout;
+        globalSearchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            const val = e.target.value.trim();
+            if (!val) {
+                showCourseOverview();
+            } else {
+                searchTimeout = setTimeout(() => {
+                    performSearch(val);
+                }, 400); // 400ms debounce
+            }
         });
         
-        glossaryFilterInput.addEventListener('input', (e) => {
-            renderGlossary(e.target.value);
+        globalSearchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                clearTimeout(searchTimeout);
+                const val = e.target.value.trim();
+                if (val) performSearch(val);
+                else showCourseOverview();
+            }
         });
         
     } catch (err) {
@@ -128,39 +152,65 @@ async function initSemanticAI() {
     }
 }
 
-function setupTabs() {
+function setupModals() {
     updateSavedCount();
     
-    tabGlossary.addEventListener('click', () => {
-        tabGlossary.classList.add('active');
-        tabSaved.classList.remove('active');
-        glossaryView.style.display = 'flex';
-        savedView.style.display = 'none';
-    });
-    
-    tabSaved.addEventListener('click', () => {
-        tabSaved.classList.add('active');
-        tabGlossary.classList.remove('active');
-        savedView.style.display = 'flex';
-        glossaryView.style.display = 'none';
-        renderSaved();
-    });
-    
-    // Impressum logic
-    const impLink = document.getElementById('impressum-link');
-    const impModal = document.getElementById('impressum-modal');
-    const closeImp = document.getElementById('close-impressum');
-    
-    if (impLink) {
-        impLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            impModal.style.display = 'flex';
-        });
-        closeImp.addEventListener('click', () => impModal.style.display = 'none');
-        impModal.addEventListener('click', (e) => {
-            if (e.target === impModal) impModal.style.display = 'none';
+    if (openSavedBtn) {
+        openSavedBtn.addEventListener('click', () => {
+            savedModal.style.display = 'flex';
+            renderSaved();
         });
     }
+    
+    if (closeSavedModal) {
+        closeSavedModal.addEventListener('click', () => savedModal.style.display = 'none');
+    }
+
+    if (openGlossaryBtn) {
+        openGlossaryBtn.addEventListener('click', () => {
+            glossaryModal.style.display = 'flex';
+            renderGlossaryModal();
+        });
+    }
+
+    if (closeGlossaryModal) {
+        closeGlossaryModal.addEventListener('click', () => glossaryModal.style.display = 'none');
+    }
+    
+    if (impressumLink) {
+        impressumLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            impressumModal.style.display = 'flex';
+        });
+    }
+
+    if (closeImpressum) {
+        closeImpressum.addEventListener('click', () => impressumModal.style.display = 'none');
+    }
+    
+    // Playlist filters
+    const filterContainer = document.getElementById('playlist-filters');
+    if (filterContainer) {
+        filterContainer.addEventListener('click', (e) => {
+            const btn = e.target.closest('.filter-btn');
+            if (!btn) return;
+            
+            // UI Update
+            filterContainer.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Logic Update
+            currentPlaylistFilter = btn.getAttribute('data-filter');
+            renderCourseOverview();
+        });
+    }
+
+    // Close on overlay click
+    window.addEventListener('click', (e) => {
+        if (e.target === savedModal) savedModal.style.display = 'none';
+        if (e.target === impressumModal) impressumModal.style.display = 'none';
+        if (e.target === glossaryModal) glossaryModal.style.display = 'none';
+    });
 }
 
 function updateSavedCount() {
@@ -246,73 +296,119 @@ function renderSaved() {
     bindClickHandlers(savedList);
 }
 
-function renderGlossary(filterText = '') {
-    glossaryList.innerHTML = '';
-    const query = filterText.toLowerCase();
+function renderGlossaryModal() {
+    if (!glossary || !glossaryTermsContainer) return;
 
-    glossary.forEach((videoMap, index) => {
-        // filter by video title or any term if filter text exists
-        const hasTerm = videoMap.terms.some(t => t.toLowerCase().includes(query));
-        const hasTitle = videoMap.video_title.toLowerCase().includes(query);
-        
-        if (filterText && !hasTerm && !hasTitle) return;
-
-        const li = document.createElement('li');
-        li.className = 'glossary-timeline-item';
-        
-        const termsHTML = videoMap.terms.map(t => `<span class="keyword-pill" data-term="${t}">${t}</span>`).join('');
-        
-        li.innerHTML = `
-            <div class="timeline-title" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none;">
-                <span>${index + 1}. ${videoMap.video_title}</span>
-                <span class="collapse-icon" style="font-size: 0.7rem; color: var(--text-muted); padding: 5px;">▼</span>
-            </div>
-            <div class="timeline-terms" style="display: flex;">${termsHTML}</div>
-        `;
-        
-        const titleDiv = li.querySelector('.timeline-title');
-        const termsDiv = li.querySelector('.timeline-terms');
-        const icon = li.querySelector('.collapse-icon');
-        
-        // Default collapse for unsearched items past the first 2
-        if (!filterText && index > 1) {
-            termsDiv.style.display = 'none';
-            icon.innerText = '▶';
+    // Extract unique terms
+    const allTerms = new Set();
+    glossary.forEach(video => {
+        if (video.terms) {
+            video.terms.forEach(term => allTerms.add(term));
         }
-        
-        titleDiv.addEventListener('click', () => {
-            const isHidden = termsDiv.style.display === 'none';
-            termsDiv.style.display = isHidden ? 'flex' : 'none';
-            icon.innerText = isHidden ? '▼' : '▶';
-        });
-        
-        glossaryList.appendChild(li);
     });
 
-    // Add click listeners to pills
-    document.querySelectorAll('.keyword-pill').forEach(pill => {
-        pill.addEventListener('click', (e) => {
-            const term = e.target.getAttribute('data-term');
+    const sortedTerms = Array.from(allTerms).sort((a, b) => a.localeCompare(b));
+    
+    // Group by first letter
+    const groups = {};
+    sortedTerms.forEach(term => {
+        const letter = term[0].toUpperCase();
+        if (!groups[letter]) groups[letter] = [];
+        groups[letter].push(term);
+    });
+
+    let html = '<div class="glossary-grid">';
+    Object.keys(groups).sort().forEach(letter => {
+        html += `
+            <div class="glossary-letter-group">
+                <div class="glossary-letter">${letter}</div>
+                <div class="glossary-letter-terms">
+                    ${groups[letter].map(t => `<div class="glossary-term-link">${t}</div>`).join('')}
+                </div>
+            </div>
+        `;
+    });
+    html += '</div>';
+
+    glossaryTermsContainer.innerHTML = html;
+
+    // Bind click events
+    glossaryTermsContainer.querySelectorAll('.glossary-term-link').forEach(link => {
+        link.addEventListener('click', () => {
+            const term = link.innerText;
             globalSearchInput.value = term;
+            glossaryModal.style.display = 'none';
             performSearch(term);
-            
-            // visually highlight active pill
-            document.querySelectorAll('.keyword-pill').forEach(p => p.classList.remove('active'));
-            e.target.classList.add('active');
-            
-            // Scroll to top
-            globalSearchInput.scrollIntoView({ behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
 }
 
+function renderCourseOverview() {
+    if (!overviewGrid) return;
+    overviewGrid.innerHTML = '';
+    
+    database.forEach((video, index) => {
+        // Filter logic
+        if (currentPlaylistFilter !== 'all' && !video.playlist.includes(currentPlaylistFilter)) {
+            return;
+        }
+
+        // Combine glossary terms dynamically into the video card
+        let tagsHTML = '';
+        if (glossary && glossary[index] && glossary[index].terms) {
+            tagsHTML = glossary[index].terms.map(t => `<span class="keyword-pill" data-term="${t}">${t}</span>`).join('');
+        }
+        
+        const card = document.createElement('div');
+        card.className = 'overview-card';
+        card.innerHTML = `
+            <div class="overview-thumb">
+                <img src="https://img.youtube.com/vi/${video.id}/mqdefault.jpg" alt="${video.title}">
+                <div class="overview-order">#${index + 1}</div>
+            </div>
+            <div class="overview-info">
+                <div class="overview-playlist">${video.playlist}</div>
+                <div class="overview-title">${video.title}</div>
+                <div class="overview-tags">${tagsHTML}</div>
+            </div>
+        `;
+        
+        card.addEventListener('click', (e) => {
+            // If they clicked a pill, search it
+            if (e.target.classList.contains('keyword-pill')) {
+                const term = e.target.getAttribute('data-term');
+                globalSearchInput.value = term;
+                performSearch(term);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+            // Else load the video
+            loadVideo(video.id, 0, video.title, video.playlist);
+        });
+        
+        overviewGrid.appendChild(card);
+    });
+}
+
+function showCourseOverview() {
+    if (courseOverviewSection) courseOverviewSection.style.display = 'block';
+    if (resultsLayout) resultsLayout.style.display = 'none';
+}
+
+function showSearchResults() {
+    if (courseOverviewSection) courseOverviewSection.style.display = 'none';
+    if (resultsLayout) resultsLayout.style.display = 'block';
+}
+
 // Ensure async
 async function performSearch(query) {
-    if (!query) {
-        resultsList.innerHTML = '';
-        searchStats.innerText = '0 matches';
+    if (!database.length || !fuse) {
+        console.warn("Search attempted before data was loaded.");
         return;
     }
+    
+    showSearchResults();
 
     const q = query.toLowerCase().trim();
     const grouped = {};
@@ -370,6 +466,12 @@ async function performSearch(query) {
 
         // Sort chronological (by video sequence)
         const results = Object.values(grouped);
+        
+        // Sort segments within each video by time (as requested)
+        results.forEach(res => {
+            res.segments.sort((a, b) => a.start - b.start);
+        });
+
         results.sort((a,b) => a.video.order - b.video.order);
         
         renderDensityMap(grouped);
