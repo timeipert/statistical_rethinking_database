@@ -595,10 +595,23 @@ function bindClickHandlers(container) {
 }
 
 function loadVideo(videoId, startTime, title, playlist) {
-    if (!videoId) return;
+    console.log(`[DEBUG] Attempting to load video: ${videoId} at ${startTime}s`);
+    console.log(`[DEBUG] Title: ${title} | Playlist: ${playlist}`);
+    console.log(`[DEBUG] Is mainVideoSection null?`, mainVideoSection === null);
+    console.log(`[DEBUG] Is videoPlayer null?`, videoPlayer === null);
+
+    if (!videoId) {
+        console.error("[DEBUG] Aborting: videoId is undefined or null");
+        return;
+    }
 
     // Show entire video section if available
-    if (mainVideoSection) mainVideoSection.style.display = 'flex';
+    if (mainVideoSection) {
+        console.log("[DEBUG] mainVideoSection found. Setting display flex.");
+        mainVideoSection.style.display = 'flex';
+    } else {
+        console.warn("[DEBUG] mainVideoSection is NULL! Skipping style block.");
+    }
     
     if (videoPlayer) {
         videoPlayer.style.display = 'block';
