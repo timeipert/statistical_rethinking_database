@@ -2,7 +2,7 @@
 
 Some AI Experiment from that could be helpful. See [Richard McElreath's Youtube Page](https://www.youtube.com/@rmcelreath) for the actual lectures.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-success?style=for-the-badge)](https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPOSITORY_NAME/docs)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-success?style=for-the-badge)](https://timeipert.github.io/statistical_rethinking_database/)
 
 A entirely offline **Retrieval-Augmented Generation (RAG)** search engine and digital register for Richard McElreath's brilliant *Statistical Rethinking* courses (2026). 
 
