@@ -1,10 +1,12 @@
 # Statistical Rethinking - Semantic Course Search 🦉
 
+Some AI Experiment from that could be helpful. See [Richard McElreath's Youtube Page](https://www.youtube.com/@rmcelreath) for the actual lectures.
+
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-success?style=for-the-badge)](https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPOSITORY_NAME/docs)
 
-A massive, entirely offline **Retrieval-Augmented Generation (RAG)** search engine and digital register for Professor Richard McElreath's brilliant *Statistical Rethinking* courses (2022 & 2026). 
+A entirely offline **Retrieval-Augmented Generation (RAG)** search engine and digital register for Richard McElreath's brilliant *Statistical Rethinking* courses (2026). 
 
-This tool allows you to search across 22 hours of dense lectures and instantly locate highly specific concepts, formulas, or thematic examples (e.g. *Collider Bias*, *MCMC*, or *Waffle House*). The application runs entirely in your browser using **WebAssembly (WASM)**, requiring zero servers or backend infrastructure.
+This tool allows you to search across 20 hours of dense lectures and instantly locate highly specific concepts, formulas, or thematic examples (e.g. *Collider Bias*, *MCMC*, or *Waffle House*). The application runs entirely in your browser using **WebAssembly (WASM)**, requiring zero servers or backend infrastructure.
 
 ---
 
