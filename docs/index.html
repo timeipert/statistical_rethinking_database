@@ -13,7 +13,7 @@
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap"
         rel="stylesheet">
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
 </head>
 
 <body>
@@ -73,16 +73,24 @@
         <!-- Main Content -->
         <main class="main-content">
 
-            <!-- Video Player -->
-            <section class="video-section glass-panel">
+            <!-- Massive Search Hero -->
+            <div class="search-hero">
+                <div class="hero-headers">
+                    <h2>Semantic Course Search</h2>
+                    <p>Instantly locate concepts across 22 hours of Statistical Rethinking lectures.</p>
+                </div>
+                
+                <div class="search-input-group">
+                    <svg class="hero-search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <input type="text" id="global-search" placeholder="Try 'Collider bias', 'Splines', or 'Waffles'..." autocomplete="off">
+                    <button id="search-btn" class="btn-primary">Search</button>
+                </div>
+            </div>
+
+            <!-- Video Player (Hidden by default until a video is clicked) -->
+            <section class="video-section glass-panel" id="main-video-section" style="display: none; margin-bottom: 2rem;">
                 <div id="video-container" class="video-container">
-                    <div class="video-placeholder">
-                        <div class="loader-ring"></div>
-                        <p>Search a concept or select a glossary term to begin.</p>
-                    </div>
-                    <iframe id="youtube-player" src="" title="YouTube video player" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        allowfullscreen style="display: none;"></iframe>
+                    <iframe id="youtube-player" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                 </div>
                 <div class="video-meta">
                     <h3 id="current-video-title">No Video Selected</h3>
@@ -90,12 +98,11 @@
                 </div>
             </section>
 
-            <!-- Global Search & Results -->
-            <section class="search-section glass-panel">
-                <div class="main-search">
-                    <input type="text" id="global-search" placeholder="Search the subtitles..." autocomplete="off">
-                    <button id="search-btn" class="btn-primary">Search</button>
-                    <div class="search-stats" id="search-stats">0 matches found</div>
+            <!-- Search Results Area -->
+            <section class="results-layout">
+                <div class="search-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-glass);">
+                    <h3 style="font-size: 1.2rem; font-weight: 500;">Search Results</h3>
+                    <span class="search-stats" id="search-stats">0 matches found</span>
                 </div>
 
                 <div id="density-map-container" class="density-map-container" style="display: none;">
@@ -105,7 +112,6 @@
 
                 <div class="results-container">
                     <ul id="results-list" class="results-list">
-                        <!-- Search results via JS -->
                         <div class="empty-state">
                             <span class="empty-icon">🔍</span>
                             <p>Enter a term above to search through the entire course subtitles.</p>
@@ -151,7 +157,7 @@
 
     <!-- Fuse.js for exact fallback -->
     <script src="https://cdn.jsdelivr.net/npm/fuse.js/dist/fuse.js"></script>
-    <script type="module" src="app.js"></script>
+    <script type="module" src="app.js?v=2"></script>
 </body>
 
 </html>
