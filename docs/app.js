@@ -440,6 +440,14 @@ async function performSearch(query) {
         
         topHits.forEach(res => {
             const seg = res.chunk;
+            // Format highlights
+            let text = seg.text;
+            // Normalize for comparison
+            const normalizedText = text.toLowerCase().replace(/\s+/g, ' ');
+            const normalizedQuery = q.replace(/\s+/g, ' ');
+
+            const isExact = normalizedText.includes(normalizedQuery);
+            
             if (!grouped[seg.videoId]) {
                 const vIndex = database.findIndex(v => v.id === seg.videoId);
                 grouped[seg.videoId] = {
@@ -448,18 +456,33 @@ async function performSearch(query) {
                     bestScore: res.score
                 };
             } else {
-                grouped[seg.videoId].bestScore = Math.max(grouped[seg.videoId].bestScore, res.score); // max is best
+                grouped[seg.videoId].bestScore = Math.max(grouped[seg.videoId].bestScore, res.score); 
             }
             
-            // Inject highlights for semantic matches manually
-            let text = seg.text;
-            const regex = new RegExp(`(${q.split(' ').join('|')})`, 'gi');
-            text = text.replace(regex, match => `<mark>${match}</mark>`);
+            // Format highlights
+            if (isExact) {
+                const regex = new RegExp(`(${q.split(' ').join('|')})`, 'gi');
+                text = text.replace(regex, match => `<mark>${match}</mark>`);
+            }
             
+            // Find related concepts for semantic reasoning
+            let relatedConcepts = [];
+            if (!isExact && glossary) {
+                // Find any keywords from any video's glossary that appear in this segment
+                const allTerms = [...new Set(Object.values(glossary).flatMap(g => g.terms))];
+                relatedConcepts = allTerms.filter(term => {
+                    const t = term.toLowerCase();
+                    return normalizedText.includes(t) && !normalizedQuery.includes(t);
+                }).slice(0, 2);
+            }
+
             grouped[seg.videoId].segments.push({
                 start: seg.start,
                 displayTime: formatTime(seg.start),
-                text: text
+                text: text,
+                matchType: isExact ? 'exact' : 'semantic',
+                score: res.score,
+                relatedConcepts: relatedConcepts
             });
             totalSegmentsFound++;
         });
@@ -514,7 +537,9 @@ async function performSearch(query) {
         grouped[seg.videoId].segments.push({
             start: seg.start,
             displayTime: formatTime(seg.start),
-            text: highlightedText
+            text: highlightedText,
+            matchType: 'exact',
+            score: 1.0
         });
         totalSegmentsFound++;
     });
@@ -631,12 +656,30 @@ function renderResults(results, totalSegments) {
         
         let segmentsHTML = res.segments.map(seg => {
             const isSaved = savedSegments.some(s => s.videoId === res.video.id && s.start == seg.start);
+            
+            // Generate Badge
+            let badgeHTML = '';
+            if (seg.matchType === 'exact') {
+                badgeHTML = `<span class="match-badge match-badge-exact">🎯 Direct mention</span>`;
+            } else if (seg.matchType === 'semantic') {
+                const percent = Math.round(seg.score * 100);
+                badgeHTML = `<span class="match-badge match-badge-semantic">✨ Similar topic <span class="match-score">${percent}%</span></span>`;
+            }
+
+            // Semantic Reasoning
+            let reasonHTML = '';
+            if (seg.matchType === 'semantic' && seg.relatedConcepts && seg.relatedConcepts.length > 0) {
+                reasonHTML = `<span class="semantic-reason">Related to: ${seg.relatedConcepts.join(', ')}</span>`;
+            }
+
             return `
             <div class="segment" data-vid="${res.video.id}" data-time="${Math.floor(seg.start)}" data-title="${res.video.title}" data-pl="${res.video.playlist}">
-                <div class="timestamp">
-                    ${seg.displayTime}
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <div class="timestamp">${seg.displayTime}</div>
+                    ${badgeHTML}
                 </div>
                 <div class="text-snippet">${seg.text}</div>
+                ${reasonHTML}
                 <button class="save-btn ${isSaved ? 'saved' : ''}" title="Bookmark segment" data-vid="${res.video.id}" data-title="${res.video.title}" data-pl="${res.video.playlist}" data-start="${seg.start}" data-text="${encodeURIComponent(seg.text)}">${isSaved ? '★' : '☆'}</button>
             </div>
             `;
